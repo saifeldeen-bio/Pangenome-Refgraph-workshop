@@ -142,12 +142,15 @@ npm install
 
 `pggb` wants **one multi-FASTA file** containing all the genomes/haplotypes you want in the
 graph, each with a unique sequence name.
-You can fo to NCBI and Install some genomes for any species. and save them in `.fa` format
+You can go to NCBI and Install some genomes for any species. and save them in `.fa` format
 
-Combine and index:
+In this seesion, we we'll work on MTB:
+https://www.ncbi.nlm.nih.gov/datasets/genome/?taxon=1773
+
+
+you can download 10 references from the link, Combine them in `haplotypes.fa` file, and index them:
 
 ```bash
-cat sampleA.fa sampleB.fa sampleC.fa > haplotypes.fa
 bgzip haplotypes.fa
 samtools faidx haplotypes.fa.gz
 ```
@@ -257,7 +260,20 @@ mkdir -p exampleData/mygraph
 cp /path/to/graph.xg /path/to/graph.gbwt exampleData/mygraph/
 ```
 
-Edit `src/config.json` so `dataPath` points at that folder, then:
+Edit `src/config.json` so `dataPath` points at that folder:
+Just add this section inside the `"DATA_SOURCES"` in the `src/config.json` 
+```
+{
+      "name": "MTB pangenome",
+      "tracks": [
+        {"trackFile": "exampleData/mygraph/graph.xg", "trackType": "graph"}
+      ],
+      "dataType": "built-in",
+      "region": "NC_000962.3:1-5000"
+    }
+```
+
+then:
 
 ```bash
 npm start
