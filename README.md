@@ -175,7 +175,7 @@ pggb -i haplotypes.fa.gz -n 4 -s 5000 -p 90 -t 8 -o out -M
 
 - `-t` = number of threads
 - `-M` = also emit a multiple sequence alignment (MAF) alongside the graph — handy
-  for comparing directly against the graph output while teaching
+  for comparing directly against the graph output
 - `-o` = output directory
 
 What happens under the hood:
