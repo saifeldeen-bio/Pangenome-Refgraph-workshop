@@ -281,5 +281,158 @@ npm start
 
 Open `http://localhost:3000`, select your dataset from the dropdown, search the
 region, and render.
+https://github.com/saifeldeen-bio/Pangenome-Refgraph-workshop
+
+---
+
+## Step 9 — Visualizing Aligned GAM Files
+
+In this section, we will visualize sequencing reads aligned to a pangenome graph using Sequence Tube Map.
+
+Sequence Tube Map allows us to display a graph reference alongside one or more GAM files containing reads aligned to that graph. Each GAM file is displayed as a separate read track, allowing us to inspect individual samples or compare multiple samples against the same graph.
+
+### 1. Organize Your Data
+
+Before editing the configuration file, make sure your graph and GAM files are accessible to the Sequence Tube Map application.
+
+For example, organize your files as follows:
+
+```text
+exampleData/
+└── mygraph/
+    ├── graph1/
+    │   ├── graph.xg
+    │   ├── sample1.gam
+    │   ├── sample2.gam
+    │   ├── sample3.gam
+    │   └── ...
+    ├── graph2/
+    │   ├── graph.xg
+    │   ├── sample1.gam
+    │   ├── sample2.gam
+    │   └── ...
+    ├── graph3/
+    │   ├── graph.xg
+    │   ├── sample1.gam
+    │   └── ...
+    └── graph4/
+        ├── graph.xg
+        ├── sample1.gam
+        └── ...
+```
+
+**Note:** The directory structure above is an example. Adjust the paths according to where your actual graph and GAM files are stored.
+
+### 2. Configure the Graph and GAM Tracks
+
+Open `src/config.json`.
+
+First, make sure that `dataPath` points to the directory containing your data files.
+
+Next, locate the `"DATA_SOURCES"` section and add a new data source.
+
+For example, to visualize the first sample aligned to the chr1 graph:
+
+```json
+{
+  "name": "graph1 - Sample 1",
+  "tracks": [
+    {
+      "trackFile": "exampleData/mygraph/graph1/graph.xg",
+      "trackType": "graph"
+    },
+    {
+      "trackFile": "exampleData/mygraph/graph1/sample1.gam",
+      "trackType": "read"
+    }
+  ],
+  "dataType": "built-in",
+  "region": "REFERENCE_NAME:1-5000"
+}
+```
+
+Replace `REFERENCE_NAME` with the actual reference path available in your graph. You can inspect the available paths using:
+
+```bash
+vg paths -x graph.xg
+```
+
+**Understanding the configuration:**
+
+- `graph.xg`: The pangenome graph reference.
+- `sample1.gam`: Reads from the first sample aligned to the graph.
+- `trackType: graph`: Specifies the graph reference track.
+- `trackType: read`: Specifies an aligned reads track.
+- `region`: Specifies the genomic region to visualize.
+
+### 3. Visualizing Multiple Samples
+
+Sequence Tube Map also allows us to display multiple GAM files against the same graph.
+
+To compare multiple samples, simply add additional read tracks to the `"tracks"` array.
+
+For example:
+
+```json
+{
+  "name": "graph1 - Multiple Samples",
+  "tracks": [
+    {
+      "trackFile": "exampleData/mygraph/graph1/graph.xg",
+      "trackType": "graph"
+    },
+    {
+      "trackFile": "exampleData/mygraph/graph1/sample1.gam",
+      "trackType": "read"
+    },
+    {
+      "trackFile": "exampleData/mygraph/graph1/sample2.gam",
+      "trackType": "read"
+    },
+    {
+      "trackFile": "exampleData/mygraph/graph1/sample3.gam",
+      "trackType": "read"
+    }
+  ],
+  "dataType": "built-in",
+  "region": "REFERENCE_NAME:1-5000"
+}
+```
+
+Each GAM file will appear as an independent read track, allowing you to inspect the alignments of different samples against the same graph.
+
+You can add all 10 samples if needed. However, for the initial visualization, it is recommended to start with one sample and then add more samples to explore how their alignments differ.
+
+### 4. Repeat the Process for Other Graphs
+
+Repeat the configuration process for the remaining pangenome graphs:
+
+- graph2
+- graph3
+- graph4
+
+You can create a separate data source for each graph, or create additional data sources for different sample combinations.
+
+For example:
+
+| Data source | Graph | GAM files |
+|---|---|---|
+| graph1 - Sample 1 | graph1 graph | Sample 1 |
+| graph1 - Multiple Samples | graph1 graph | Samples 1–10 |
+| graph2 - Multiple Samples | graph2 graph | Samples 1–10 |
+| graph3 - Multiple Samples | graph3 graph | Samples 1–10 |
+| graph4 - Multiple Samples | graph4 graph | Samples 1–10 |
+
+### 5. Launch the Visualization
+
+After saving `config.json`, restart the Sequence Tube Map application if it is already running.
+
+Select your newly configured data source from the Data menu.
+
+Specify the genomic region you want to inspect and click **Go**.
+
+You should now see the pangenome graph alongside the aligned reads from the selected GAM files.
+
+**Important:** Make sure that each GAM file was aligned against the corresponding graph. For example, GAM files aligned against the graph1 graph should be visualized with the graph1 graph, not with graph2 or another graph.
 
 ---
